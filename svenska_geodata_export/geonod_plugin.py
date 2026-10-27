@@ -27,7 +27,8 @@ from .export_pipeline import export_payload, new_export_directory, wait_for_expo
 
 
 class GeoNodPlugin:
-    VERSION = '1.0.1'
+    VERSION = '1.0.0'
+    PLUGIN_NAME = 'Svenska geodata – Export'
     HELP_URL = 'https://geonod.se/integrationer#qgis-guide'
     EXPORT_DETAILS_URL = 'https://geonod.se/exporter'
 
@@ -52,13 +53,13 @@ class GeoNodPlugin:
         self._active_tasks = {}
 
     def initGui(self):
-        self.action = QAction('GeoNod', self.iface.mainWindow())
+        self.action = QAction(self.PLUGIN_NAME, self.iface.mainWindow())
         self.action.setIcon(QIcon(str(Path(__file__).resolve().parent / 'assets' / 'geonod-symbol.svg')))
         self.action.triggered.connect(self.show_panel)
-        self.iface.addPluginToMenu('&GeoNod', self.action)
+        self.iface.addPluginToMenu(self.PLUGIN_NAME, self.action)
         self.iface.addToolBarIcon(self.action)
-        self.dock = QgsDockWidget('GeoNod', self.iface.mainWindow())
-        self.dock.setObjectName('GeoNodDockWidget')
+        self.dock = QgsDockWidget(self.PLUGIN_NAME, self.iface.mainWindow())
+        self.dock.setObjectName('SvenskaGeodataExportDockWidget')
         self.panel = GeoNodDockWidget(self.dock)
         self.dock.setWidget(self.panel)
         self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock)
@@ -90,7 +91,7 @@ class GeoNodPlugin:
     def unload(self):
         self._clear_project_area_overlay()
         if self.action:
-            self.iface.removePluginMenu('&GeoNod', self.action)
+            self.iface.removePluginMenu(self.PLUGIN_NAME, self.action)
             self.iface.removeToolBarIcon(self.action)
         if self.dock:
             self.iface.removeDockWidget(self.dock)

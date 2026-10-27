@@ -1,0 +1,18 @@
+[general]
+name=Svenska geodata – Export
+description=Explore and export Swedish geodata from GeoNod in QGIS.
+about=EN: Svenska geodata – Export connects QGIS to GeoNod, an independent service separate from GeoNode, with a catalog focused primarily on Swedish geodata. A GeoNod account is required. Create an account at https://geonod.se, open the Svenska geodata – Export panel in QGIS, click Anslut (Connect), and sign in and approve the connection in your browser. Browse layers, select an area, and download or add your export to QGIS. Guide: https://geonod.se/integrationer#qgis-guide
+    SV: Svenska geodata – Export ansluter QGIS till GeoNod, en fristående geodatatjänst och inte GeoNode. Katalogen innehåller främst svenska geodata och kräver ett GeoNod-konto. Skapa ett konto på https://geonod.se, öppna panelen Svenska geodata – Export i QGIS, klicka på Anslut och logga in och godkänn anslutningen i webbläsaren. Välj lager och område och ladda ner eller lägg till exporten i QGIS. Guide: https://geonod.se/integrationer#qgis-guide
+version=1.0.0
+qgisMinimumVersion=3.28
+author=GeoNod
+email=hampus.carlson@geonod.se
+icon=assets/geonod-symbol.svg
+category=Web
+tags=geodata,catalog,sweden,qgis
+homepage=https://github.com/Segl-segl/geonod-qgis#readme
+tracker=https://github.com/Segl-segl/geonod-qgis/issues
+repository=https://github.com/Segl-segl/geonod-qgis
+experimental=False
+deprecated=False
+changelog=1.0.0 - First release as Svenska geodata – Export. Secure GeoNod device pairing, catalog browsing, AOI selection, local exports, and loading delivered vector and raster data into QGIS.

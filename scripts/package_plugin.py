@@ -6,8 +6,8 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PLUGIN = ROOT / 'geonod'
-OUTPUT = ROOT / 'dist' / 'geonod-qgis-plugin.zip'
+PLUGIN = ROOT / 'svenska_geodata_export'
+OUTPUT = ROOT / 'dist' / 'svenska-geodata-export.zip'
 REQUIRED = ('metadata.txt', 'LICENSE', '__init__.py', 'geonod_plugin.py', 'dock_widget.py', 'api_client.py', 'auth.py', 'catalog.py', 'aoi.py', 'aoi_overlay.py', 'workflow.py', 'export_pipeline.py', 'delivery.py', 'styles.py', 'credential_store.py', 'assets/geonod-symbol.svg')
 EXCLUDED_PARTS = {'__pycache__', 'tests', '.git'}
 EXCLUDED_SUFFIXES = {'.pyc', '.pyo', '.pem', '.key', '.p12', '.pfx'}

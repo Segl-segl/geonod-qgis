@@ -1,6 +1,6 @@
-# GeoNod for QGIS
+# Svenska geodata – Export
 
-GeoNod for QGIS connects QGIS to the GeoNod catalog using secure device pairing. GeoNod is an independent service, separate from GeoNode, focused primarily on Swedish geodata. A GeoNod account is required. After connecting, you can browse the catalog, select one or more layers, choose an area of interest (AOI), and request an export without leaving QGIS.
+Svenska geodata – Export connects QGIS to the GeoNod catalog using secure device pairing. GeoNod is an independent service, separate from GeoNode, focused primarily on Swedish geodata. A GeoNod account is required. After connecting, you can browse the catalog, select one or more layers, choose an area of interest (AOI), and request an export without leaving QGIS.
 
 The plugin supports these current workflows:
 
@@ -16,19 +16,25 @@ The plugin supports these current workflows:
 The primary installation path is QGIS Plugin Manager:
 
 1. In QGIS, open **Plugins → Manage and Install Plugins…**.
-2. Search for **GeoNod** in **All**.
+2. Search for **Svenska geodata – Export** in **All**.
 3. Select it, choose **Install Plugin**, and make sure it is enabled.
-4. Open the GeoNod panel from the **GeoNod** menu or the GeoNod toolbar button.
+4. Open the **Svenska geodata – Export** panel from its menu or toolbar button.
 
 ## First connection
 
-1. Create an account at [geonod.se](https://geonod.se), open the GeoNod panel and select **Anslut** (Connect).
+1. Create an account at [geonod.se](https://geonod.se), open the **Svenska geodata – Export** panel and select **Anslut** (Connect).
 2. QGIS opens your browser to a GeoNod approval page.
 3. Sign in to your GeoNod account if needed, review the device pairing request, and approve it.
 4. Return to QGIS and wait for the panel to show your organization and catalog. The device credential is stored through QGIS Authentication Manager; if its authentication database is unavailable, the credential is kept only for the current QGIS session.
 5. Choose catalog layers and an AOI, then select **Download** or **Download and add to QGIS**.
 
 See the [GeoNod QGIS integration guide](https://geonod.se/integrationer#qgis-guide) for more information.
+
+## Kom igång
+
+1. Skapa ett GeoNod-konto på [geonod.se](https://geonod.se).
+2. Öppna panelen **Svenska geodata – Export** i QGIS och klicka på **Anslut**.
+3. Logga in och godkänn anslutningen i webbläsaren. Återvänd sedan till QGIS och välj lager och område för export.
 
 ## Manual ZIP installation (development fallback)
 
@@ -38,12 +44,12 @@ Use ZIP installation only for development or when Plugin Manager is unavailable.
 python scripts/package_plugin.py
 ```
 
-This creates `dist/geonod-qgis-plugin.zip`. In QGIS, open **Plugins → Manage and Install Plugins… → Install from ZIP**, select that file, then enable **GeoNod**.
+This creates `dist/svenska-geodata-export.zip`, with `svenska_geodata_export/` as its plugin package. In QGIS, open **Plugins → Manage and Install Plugins… → Install from ZIP**, select that file, then enable **Svenska geodata – Export**.
 
 ## QGIS styles
 
-An optional QGIS-native `.qml` style can be placed in `geonod/assets/styles/<layer_id>.qml`, for example `naturvardsverket-naturreservat.qml`. The plugin applies it when the matching `layer_id` appears in `DeliveryManifest.json`. If no style exists, QGIS uses its default renderer.
+An optional QGIS-native `.qml` style can be placed in `svenska_geodata_export/assets/styles/<layer_id>.qml`, for example `naturvardsverket-naturreservat.qml`. The plugin applies it when the matching `layer_id` appears in `DeliveryManifest.json`. If no style exists, QGIS uses its default renderer.
 
 ## License
 
-GeoNod for QGIS is distributed under GPL-2.0-or-later. See `LICENSE`.
+Svenska geodata – Export is distributed under GPL-2.0-or-later. See `LICENSE`.

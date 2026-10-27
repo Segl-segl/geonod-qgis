@@ -6,7 +6,8 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+from zipfile import ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
 GUIDE = 'https://geonod.se/integrationer#qgis-guide'
@@ -15,13 +16,29 @@ GUIDE = 'https://geonod.se/integrationer#qgis-guide'
 class MetadataTests(unittest.TestCase):
     def test_publication_metadata(self):
         config = configparser.ConfigParser(interpolation=None)
-        config.read(ROOT / 'geonod' / 'metadata.txt', encoding='utf-8')
+        config.read(ROOT / 'svenska_geodata_export' / 'metadata.txt', encoding='utf-8')
         meta = config['general']
+        self.assertEqual(meta['name'], 'Svenska geodata – Export')
+        self.assertEqual(meta['version'], '1.0.0')
         self.assertEqual(meta['qgisMinimumVersion'], '3.28')
         self.assertIn('Swedish geodata', meta['description'])
         for text in ('EN:', 'SV:', 'GeoNode', 'GeoNod account', 'GeoNod-konto',
                      'webbläsaren', 'browser', GUIDE):
             self.assertIn(text, meta['about'])
+
+    def test_package_has_new_plugin_id_and_no_old_directory(self):
+        from scripts import package_plugin
+        with tempfile.TemporaryDirectory() as directory:
+            archive = Path(directory) / 'plugin.zip'
+            with patch.object(package_plugin, 'OUTPUT', archive):
+                self.assertEqual(package_plugin.main(), 0)
+            with ZipFile(archive) as zipped:
+                names = zipped.namelist()
+                self.assertEqual({name.split('/')[0] for name in names}, {'svenska_geodata_export'})
+                self.assertIn('svenska_geodata_export/__init__.py', names)
+                self.assertIn('svenska_geodata_export/metadata.txt', names)
+                self.assertIn(b'def classFactory', zipped.read('svenska_geodata_export/__init__.py'))
+                self.assertFalse(any('__pycache__' in name or '/tests/' in name for name in names))
 
 
 try:
@@ -30,7 +47,7 @@ try:
                            QgsVectorLayer, QgsWkbTypes, QgsVectorFileWriter)
     from qgis.PyQt.QtCore import Qt, QStandardPaths
     from qgis.PyQt.QtGui import QDesktopServices
-    from qgis.PyQt.QtWidgets import QSizePolicy
+    from qgis.PyQt.QtWidgets import QLabel, QSizePolicy, QWidget
 except ImportError:
     QgsApplication = None
 
@@ -54,7 +71,7 @@ class QgisCompatibilityTests(unittest.TestCase):
             self.assertTrue(hasattr(group, member))
 
     def test_account_guidance_follows_connection_state(self):
-        from geonod.dock_widget import GeoNodDockWidget
+        from svenska_geodata_export.dock_widget import GeoNodDockWidget
         panel = GeoNodDockWidget()
         self.assertFalse(panel.getting_started.isHidden())
         self.assertEqual(panel.getting_started.text(), 'Ny på GeoNod? Skapa ett konto på geonod.se. Klicka sedan på Anslut och godkänn anslutningen i webbläsaren.')
@@ -67,14 +84,34 @@ class QgisCompatibilityTests(unittest.TestCase):
         self.assertFalse(panel.getting_started.isHidden())
 
     def test_help_opens_qgis_guide(self):
-        from geonod.geonod_plugin import GeoNodPlugin
+        from svenska_geodata_export.geonod_plugin import GeoNodPlugin
         with patch.object(QDesktopServices, 'openUrl') as open_url:
             GeoNodPlugin.open_help(GeoNodPlugin.__new__(GeoNodPlugin))
         self.assertEqual(open_url.call_args.args[0].toString(), GUIDE)
 
+    def test_visible_plugin_identity_and_menu_cleanup(self):
+        from svenska_geodata_export.geonod_plugin import GeoNodPlugin
+        from svenska_geodata_export import classFactory
+        window = QWidget()
+        iface = Mock()
+        iface.mainWindow.return_value = window
+        plugin = classFactory(iface)
+        self.assertEqual(plugin.VERSION, '1.0.0')
+        with patch.object(plugin.credentials, 'read', return_value=None), \
+                patch.object(plugin, '_refresh_destination_description'):
+            plugin.initGui()
+        name = 'Svenska geodata – Export'
+        self.assertEqual(plugin.action.text(), name)
+        self.assertEqual(plugin.dock.windowTitle(), name)
+        self.assertIn(name, [label.text() for label in plugin.panel.findChildren(QLabel)])
+        iface.addPluginToMenu.assert_called_once_with(name, plugin.action)
+        iface.addToolBarIcon.assert_called_once_with(plugin.action)
+        plugin.unload()
+        iface.removePluginMenu.assert_called_once_with(name, plugin.action)
+
     def test_capture_polygon_and_write_both_package_modes(self):
-        from geonod.aoi import capture_selected_polygon
-        from geonod.delivery import DeliverySource, _persistent_reprojected_vector_layer
+        from svenska_geodata_export.aoi import capture_selected_polygon
+        from svenska_geodata_export.delivery import DeliverySource, _persistent_reprojected_vector_layer
 
         layer = QgsVectorLayer('Polygon?crs=EPSG:4326', 'source', 'memory')
         feature = QgsFeature(layer.fields())

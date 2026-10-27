@@ -1,4 +1,4 @@
-"""GeoNod QGIS plugin entry package."""
+"""Svenska geodata – Export QGIS plugin entry package."""
 
 
 def classFactory(iface):
