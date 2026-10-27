@@ -78,7 +78,7 @@ class GeoNodDockWidget(QWidget):
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         content = QWidget()
         content.setMinimumWidth(0)
         layout = QVBoxLayout(content)
@@ -97,9 +97,13 @@ class GeoNodDockWidget(QWidget):
         self.status.setStyleSheet(f'color: {MUTED};')
         self.organization = QLabel('Organisation: —')
         self.organization.setStyleSheet(f'color: {MUTED}; font-size: 11px;')
+        self.getting_started = QLabel('Ny på GeoNod? Skapa ett konto på geonod.se. Klicka sedan på Anslut och godkänn anslutningen i webbläsaren.')
+        self.getting_started.setWordWrap(True)
+        self.getting_started.setStyleSheet(f'color: {MUTED}; font-size: 11px;')
         account_text.addWidget(account_label)
         account_text.addWidget(self.status)
         account_text.addWidget(self.organization)
+        account_text.addWidget(self.getting_started)
         account_layout.addLayout(account_text, 1)
         self.connect_button = self._button('Anslut', primary=True)
         self.disconnect_button = self._button('Koppla från')
@@ -129,14 +133,14 @@ class GeoNodDockWidget(QWidget):
         self.layers.setHeaderHidden(True)
         self.layers.setRootIsDecorated(True)
         self.layers.setIndentation(14)
-        self.layers.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.layers.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.layers.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.layers.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.layers.setMinimumHeight(220)
         self.layers.setEnabled(False)
         self.layers.setStyleSheet(f'QTreeWidget {{ background: transparent; border: 0; }} QTreeWidget::item {{ border: 0; }}')
         catalog_layout.addWidget(self.layers)
         self.empty = QLabel('Anslut till GeoNod för att se lagerkatalogen.')
-        self.empty.setAlignment(Qt.AlignCenter)
+        self.empty.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.empty.setWordWrap(True)
         self.empty.setStyleSheet(f'color: {MUTED}; padding: 10px;')
         catalog_layout.addWidget(self.empty)
@@ -288,7 +292,7 @@ class GeoNodDockWidget(QWidget):
         layout.setContentsMargins(0, 0, 0, 2)
         badge = QLabel(number)
         badge.setFixedSize(26, 26)
-        badge.setAlignment(Qt.AlignCenter)
+        badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
         badge.setStyleSheet(f'background: {FOREST_SOFT}; color: {FOREST}; border-radius: 13px; font-weight: bold;')
         text = QVBoxLayout()
         heading = QLabel(title)
@@ -298,7 +302,7 @@ class GeoNodDockWidget(QWidget):
         subheading.setStyleSheet(f'color: {MUTED}; font-size: 11px;')
         text.addWidget(heading)
         text.addWidget(subheading)
-        layout.addWidget(badge, 0, Qt.AlignTop)
+        layout.addWidget(badge, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(text, 1)
         return layout
 
@@ -309,6 +313,7 @@ class GeoNodDockWidget(QWidget):
 
     def set_disconnected(self, message: str = 'Inte ansluten'):
         self.status.setText(message)
+        self.getting_started.setVisible(True)
         self.organization.setText('Organisation: —')
         self.connect_button.setVisible(True)
         self.connect_button.setEnabled(True)
@@ -339,6 +344,7 @@ class GeoNodDockWidget(QWidget):
 
     def set_connected(self, organization_name: str, layers: list[CatalogLayer], project_areas: list[dict[str, Any]] | None = None):
         self.status.setText('Ansluten till GeoNod')
+        self.getting_started.setVisible(False)
         self.organization.setText('Organisation: ' + (organization_name or '—'))
         self.connect_button.setVisible(False)
         self.disconnect_button.setVisible(True)
@@ -457,7 +463,7 @@ class GeoNodDockWidget(QWidget):
                 self.layers.setItemWidget(subcategory_item, 0, self._group_row(subcategory.name, list(subcategory.layers), False))
                 for layer in subcategory.layers:
                     layer_item = QTreeWidgetItem(subcategory_item)
-                    layer_item.setData(0, Qt.UserRole, layer.id)
+                    layer_item.setData(0, Qt.ItemDataRole.UserRole, layer.id)
                     self.layers.setItemWidget(layer_item, 0, self._layer_row(layer))
         self.empty.setText('Inga lager matchar sökningen.' if self._layers else 'GeoNods lagerkatalog är tom.')
         self.empty.setVisible(not visible)
@@ -474,7 +480,7 @@ class GeoNodDockWidget(QWidget):
         button.clicked.connect(lambda _checked=False, values=layers: self._toggle_group(values))
         self._group_buttons.append((button, layers))
         layout.addWidget(label, 1)
-        layout.addWidget(button, 0, Qt.AlignTop)
+        layout.addWidget(button, 0, Qt.AlignmentFlag.AlignTop)
         return row
 
     def _layer_row(self, layer: CatalogLayer) -> QWidget:
@@ -502,7 +508,7 @@ class GeoNodDockWidget(QWidget):
             description.setWordWrap(True)
             description.setStyleSheet(f'color: {MUTED}; font-size: 10px;')
             text.addWidget(description)
-        layout.addWidget(checkbox, 0, Qt.AlignTop)
+        layout.addWidget(checkbox, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(text, 1)
         return row
 

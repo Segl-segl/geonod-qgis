@@ -33,7 +33,7 @@ def show_project_area_overlay(canvas: Any, polygon: dict[str, Any]) -> Any:
     )
     if geometry.transform(transform) not in (None, 0):
         raise ValueError('Projektområdet kunde inte omprojiceras till kartans CRS.')
-    overlay = QgsRubberBand(canvas, QgsWkbTypes.PolygonGeometry)
+    overlay = QgsRubberBand(canvas, QgsWkbTypes.GeometryType.PolygonGeometry)
     overlay.setToGeometry(geometry, None)
     overlay.setColor(QColor(63, 107, 88, 220))
     overlay.setFillColor(QColor(63, 107, 88, 48))

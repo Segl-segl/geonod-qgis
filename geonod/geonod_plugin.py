@@ -7,7 +7,11 @@ from uuid import uuid4
 
 from qgis.PyQt.QtCore import Qt, QStandardPaths, QUrl
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
-from qgis.PyQt.QtWidgets import QAction, QFileDialog
+from qgis.PyQt.QtWidgets import QFileDialog
+try:
+    from qgis.PyQt.QtGui import QAction
+except ImportError:  # Older QGIS PyQt5 shims expose QAction in QtWidgets only.
+    from qgis.PyQt.QtWidgets import QAction
 from qgis.core import QgsApplication, QgsProject, QgsTask
 from qgis.gui import QgsDockWidget
 
@@ -24,7 +28,7 @@ from .export_pipeline import export_payload, new_export_directory, wait_for_expo
 
 class GeoNodPlugin:
     VERSION = '1.0.0'
-    HELP_URL = 'https://geonod.se/integrationer'
+    HELP_URL = 'https://geonod.se/integrationer#qgis-guide'
     EXPORT_DETAILS_URL = 'https://geonod.se/exporter'
 
     def __init__(self, iface):
@@ -57,7 +61,7 @@ class GeoNodPlugin:
         self.dock.setObjectName('GeoNodDockWidget')
         self.panel = GeoNodDockWidget(self.dock)
         self.dock.setWidget(self.panel)
-        self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dock)
+        self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock)
         self.dock.hide()
         self.panel.connect_requested.connect(self.start_connection)
         self.panel.disconnect_requested.connect(self.disconnect)
@@ -263,7 +267,7 @@ class GeoNodPlugin:
         project_file = QgsProject.instance().fileName()
         if project_file:
             return Path(project_file).resolve().parent / 'GeoNod'
-        documents = QStandardPaths.writableLocation(QStandardPaths.DocumentsLocation)
+        documents = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
         return Path(documents or Path.cwd()) / 'GeoNod'
 
     def _export_root(self):

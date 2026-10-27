@@ -230,8 +230,8 @@ def _persistent_reprojected_vector_layer(source_layer: Any, source: DeliverySour
     options.layerName = package_layer_name
     options.ct = QgsCoordinateTransform(source_layer.crs(), canvas_crs, project.transformContext())
     options.actionOnExistingFile = (
-        QgsVectorFileWriter.CreateOrOverwriteFile if overwrite_file
-        else QgsVectorFileWriter.CreateOrOverwriteLayer
+        QgsVectorFileWriter.ActionOnExistingFile.CreateOrOverwriteFile if overwrite_file
+        else QgsVectorFileWriter.ActionOnExistingFile.CreateOrOverwriteLayer
     )
     package_path.parent.mkdir(parents=True, exist_ok=True)
     error = _writer_error_message(QgsVectorFileWriter.writeAsVectorFormatV3(

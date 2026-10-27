@@ -94,11 +94,11 @@ def capture_selected_polygon(iface: Any) -> tuple[dict[str, Any], str, int]:
     """Capture exactly one selected polygon feature from the active vector layer."""
     from qgis.core import QgsProject, QgsVectorLayer, QgsWkbTypes
     layer = iface.activeLayer()
-    if not isinstance(layer, QgsVectorLayer) or layer.geometryType() != QgsWkbTypes.PolygonGeometry:
+    if not isinstance(layer, QgsVectorLayer) or layer.geometryType() != QgsWkbTypes.GeometryType.PolygonGeometry:
         raise AoiCaptureError('Välj ett polygonlager som aktivt lager först.')
     feature, feature_id = selected_feature_from_layer(layer)
     geometry = feature.geometry()
-    if geometry is None or geometry.isEmpty() or QgsWkbTypes.geometryType(geometry.wkbType()) != QgsWkbTypes.PolygonGeometry:
+    if geometry is None or geometry.isEmpty() or QgsWkbTypes.geometryType(geometry.wkbType()) != QgsWkbTypes.GeometryType.PolygonGeometry:
         raise AoiCaptureError('Det markerade objektet måste vara en giltig polygon.')
     source_crs = layer.crs()
     if source_crs is None or not source_crs.isValid():

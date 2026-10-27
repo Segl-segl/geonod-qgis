@@ -1,6 +1,6 @@
 # GeoNod for QGIS
 
-GeoNod for QGIS connects QGIS to the GeoNod catalog using secure device pairing. A GeoNod account is required. After connecting, you can browse the catalog, select one or more layers, choose an area of interest (AOI), and request an export without leaving QGIS.
+GeoNod for QGIS connects QGIS to the GeoNod catalog using secure device pairing. GeoNod is an independent service, separate from GeoNode, focused primarily on Swedish geodata. A GeoNod account is required. After connecting, you can browse the catalog, select one or more layers, choose an area of interest (AOI), and request an export without leaving QGIS.
 
 The plugin supports these current workflows:
 
@@ -22,11 +22,13 @@ The primary installation path is QGIS Plugin Manager:
 
 ## First connection
 
-1. Open the GeoNod panel and select **Connect**.
+1. Create an account at [geonod.se](https://geonod.se), open the GeoNod panel and select **Anslut** (Connect).
 2. QGIS opens your browser to a GeoNod approval page.
 3. Sign in to your GeoNod account if needed, review the device pairing request, and approve it.
 4. Return to QGIS and wait for the panel to show your organization and catalog. The device credential is stored through QGIS Authentication Manager; if its authentication database is unavailable, the credential is kept only for the current QGIS session.
 5. Choose catalog layers and an AOI, then select **Download** or **Download and add to QGIS**.
+
+See the [GeoNod QGIS integration guide](https://geonod.se/integrationer#qgis-guide) for more information.
 
 ## Manual ZIP installation (development fallback)
 

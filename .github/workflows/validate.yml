@@ -15,6 +15,8 @@ jobs:
           python-version: '3.12'
       - name: Compile plugin Python
         run: python -m compileall -q geonod
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
       - name: Build plugin ZIP
         run: python scripts/package_plugin.py
       - name: Validate package layout
