@@ -27,7 +27,7 @@ from .export_pipeline import export_payload, new_export_directory, wait_for_expo
 
 
 class GeoNodPlugin:
-    VERSION = '1.0.0'
+    VERSION = '1.0.1'
     HELP_URL = 'https://geonod.se/integrationer#qgis-guide'
     EXPORT_DETAILS_URL = 'https://geonod.se/exporter'
 
